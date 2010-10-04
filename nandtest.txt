@@ -1,0 +1,7 @@
+** två av tre **
+a SIGNAL
+b SIGNAL
+c SIGNAL
+g1 NAND a b
+g2 NAND b c
+g3 NAND a c

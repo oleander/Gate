@@ -1,0 +1,8 @@
+** fel 5 **
+x SIGNAL
+y SIGNAL
+y' NOT y
+x' NOT x
+a1 AND x y'
+a2 AND y w
+z  OR a1 a2

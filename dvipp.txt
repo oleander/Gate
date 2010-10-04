@@ -1,0 +1,10 @@
+** D-vippa (positiv flank) **
+d SIGNAL
+cp SIGNAL
+d' NOT d
+a1 NAND d' b1
+a2 NAND d  b2
+b1 NAND a1 cp b2
+b2 NAND a2 cp b1
+q  NAND b1 q'
+q' NAND b2 q

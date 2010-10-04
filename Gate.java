@@ -1,19 +1,20 @@
-import java.util.ArrayList;
+import java.util.*;
 
-public class Gate {
-  
-  private String name;
-  private boolean outputValue;
-  private ArrayList<Gate> outputGates;
-  private ArrayList<Gate> inputGates;
-  private static int delay;
+public abstract class Gate {
+
+  protected String name;
+  protected boolean outputValue;
+  protected ArrayList<Gate> outputGates;
+  protected ArrayList<Gate> inputGates;
+  protected static int delay;
   
   public Gate(){
-    this.init();
+    this.inputGates = new ArrayList<Gate>();
+    this.outputGates = new ArrayList<Gate>();
   }
   
   public void init(){
-    
+    this.outputValue = this.calculateValue();
   }
   
   public String getName(){
@@ -36,27 +37,28 @@ public class Gate {
     this.inputGates.add(gate);
   }
   
-  public ArrayList<Gate> getInputGates(){
-    return this.inputGates;
+  public List<Gate> getInputGates(){
+    return (List<Gate>) this.inputGates;
   }
   
-  public boolean calculateValue(){
-    return true;
+  public abstract boolean calculateValue();
+  
+  public static void setDelay(int d){
+    delay = d;
   }
   
-  public void setDelay(int delay){
-    this.delay = delay;
+  public static int getDelay(){
+    return delay;
   }
   
-  public int getDelay(){
-    return this.delay;
+  protected void outputChanged(boolean value) {
+    this.outputValue = value;
+    for (Gate g : this.outputGates) {
+      g.inputChanged();
+    }
   }
   
-  public void setOutputChanged(Gate gate){
-    
-  }
   
-  public Gate getOutputChanged(){
-    return new Gate();
-  }
+  public abstract void inputChanged();
+  
 }

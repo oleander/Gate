@@ -1,0 +1,12 @@
+** JK-vippa **
+j SIGNAL
+k SIGNAL
+s AND j q'
+r AND k q
+** SR-vippan
+cp SIGNAL
+cp' NOT cp
+na1 NAND s cp cp'
+na2 NAND r cp cp'
+q  NAND na1 q'
+q' NAND na2 q

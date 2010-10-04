@@ -1,0 +1,45 @@
+** jämförare **
+a0 SIGNAL
+a1 SIGNAL
+a2 SIGNAL
+a3 SIGNAL
+*
+b0 SIGNAL
+b1 SIGNAL
+b2 SIGNAL
+b3 SIGNAL
+*
+a0' NOT a0
+a1' NOT a1
+a2' NOT a2
+a3' NOT a3
+*
+b0' NOT b0
+b1' NOT b1
+b2' NOT b2
+b3' NOT b3
+*
+and0  AND a0  b0'
+and0' AND a0' b0
+and1  AND a1  b1'
+and1' AND a1' b1
+and2  AND a2  b2'
+and2' AND a2' b2
+and3  AND a3  b3'
+and3' AND a3' b3
+*
+nor0 NOR and0 and0'
+nor1 NOR and1 and1'
+nor2 NOR and2 and2'
+nor3 NOR and3 and3'
+*
+g0 AND and0  nor1 nor2 nor3
+g1 AND and0' nor1 nor2 nor3
+g2 AND and1  nor2 nor3
+g3 AND and1' nor2 nor3
+g4 AND and2  nor3
+g5 AND and2' nor3
+*
+fa OR g0 g2 g4 and3
+fb OR g1 g3 g5 and3'
+fe AND nor0 nor1 nor2 nor3

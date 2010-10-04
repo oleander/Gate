@@ -5,19 +5,19 @@ class SignalGate extends Gate {
   }
   
   public void setValue(boolean value){
-    this.value = value;
+    this.outputChanged(value);
   }
   
   public boolean calculateValue(){
-    return true;
+    return this.getOutputValue();
   }
   
   public void setInputGate(Gate gate) throws GateException {
-    throw new GateException("Error SignalGate has no input");
+    throw new GateException("Error: SignalGate has no input.");
   }
   
   public void inputChanged() throws GateException {
-    throw new GateException("Error SignalGate has no input");
+    throw new GateException("Error: SignalGate has no input.");
   }
   
 }

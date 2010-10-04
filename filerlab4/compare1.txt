@@ -1,0 +1,9 @@
+** jämför 1 bit **
+a signal
+b signal
+a' not a
+b' not b
+fa and a  b'
+fb and a' b
+fe nor fa fb
+

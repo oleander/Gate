@@ -1,0 +1,8 @@
+** fel 6 **
+x SIGNAL
+y SIGNAL
+y' NOTT y
+x' NOT x
+a1 AND x y'
+a2 AND y x'
+z  OR a1 a2

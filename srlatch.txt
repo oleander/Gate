@@ -1,0 +1,5 @@
+** SR-latch med NOR-grindar **
+r SIGNAL
+s SIGNAL
+q  NOR r q'
+q' NOR s q
