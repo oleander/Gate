@@ -14,7 +14,7 @@ public abstract class Gate {
   }
   
   public void init(){
-    this.outputValue = this.calculateValue();
+    this.inputChanged();
   }
   
   public String getName(){
@@ -35,6 +35,7 @@ public abstract class Gate {
   
   public void setInputGate(Gate gate){
     this.inputGates.add(gate);
+    gate.setOutputGate(this);
   }
   
   public List<Gate> getInputGates(){
@@ -56,6 +57,10 @@ public abstract class Gate {
     for (Gate g : this.outputGates) {
       g.inputChanged();
     }
+  }
+  
+  protected void setOutputGate(Gate g) {
+    this.outputGates.add(g);
   }
   
   
