@@ -125,6 +125,7 @@ public abstract class Gate {
       Iterator i = output.entrySet().iterator();
       Gate g;
       while (i.hasNext()) {
+        /* Objekten som vi itererar över är av typen Map.Entry (måste castas) som innehåller både nyckel och värde */
         g = (Gate)((Map.Entry)i.next()).getValue();
         for (String s : gateInputs.get(g)) {
           g.setInputGate(output.get(s));
@@ -143,10 +144,12 @@ public abstract class Gate {
     Matcher m = p.matcher(s);
     ArrayList<String> output = new ArrayList<String>();
     
+    /* Matcharen hittar ett ord åt gången */
     while (m.find()) {
       output.add(m.group(0));
     }
     
+    /* Ord två bör vara gatetypen. Vi använder capitalize och lägger till Gate för att typen ska matcha classnamnet. */
     output.set(1, capitalize(output.get(1).toLowerCase()) + "Gate");
     return output;
   }
