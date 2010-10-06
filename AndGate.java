@@ -9,7 +9,7 @@ public class AndGate extends BasicGate {
     }
     for (Gate g : this.inputGates) {
       if (!g.getOutputValue()) {
-        return false
+        return false;
       }
     }
     return true;
