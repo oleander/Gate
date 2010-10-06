@@ -134,10 +134,6 @@ public abstract class Gate {
       e.printStackTrace();
     }
     
-    Iterator i = output.entrySet().iterator();
-    while(i.hasNext()) {
-      System.out.println(((Gate)((Map.Entry)i.next()).getValue()).gettoString());
-    }
     return output;
   }
   
