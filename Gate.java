@@ -8,6 +8,9 @@ public abstract class Gate {
   protected ArrayList<Gate> outputGates;
   protected ArrayList<Gate> inputGates;
   protected static int delay;
+  
+  /* Innehåller en lista på ingående parametrar till griden i fråga 
+     Listan gå inte att komma åt utifrån, då alla värden i listan är skräpvärden */
   private ArrayList<String> slug = null;
   
   public Gate(){
@@ -32,6 +35,11 @@ public abstract class Gate {
     this.slug = slug;
   }
   
+  /**
+  * Se @return
+  * @param none
+  * @return en lista med ingående värden till gaten
+  */
   private ArrayList<String> getSlug(){
     return this.slug;
   }
@@ -60,8 +68,6 @@ public abstract class Gate {
   public List<Gate> getInputGates(){
     return (List<Gate>) this.inputGates;
   }
-  
-  public abstract boolean calculateValue();
   
   public static void setDelay(int d){
     delay = d;
@@ -96,24 +102,27 @@ public abstract class Gate {
   }
   
   public static Map<String,Gate> createGates(File file){
-    /* Instanser */
     BufferedReader br                   = null;
     String strLine                      = null;
     String[] tmp                        = null;
     Gate gate                           = null;
     Map<String,Gate> gates              = new LinkedHashMap();
-    Map<String,ArrayList<String>> other = new LinkedHashMap();
+    int line = 0;
     
     try {
       br = new BufferedReader(new FileReader(file));
       while ((strLine = br.readLine()) != null) {
+        
+        /* Håller koll på vilken rad vi befinner oss i filen */
+        line++;
+        
+        /* Delar ingående värden vid 'whitespace', då räknat tab och mellanslag */
         tmp = strLine.split("\\s+");
         
         /* Om strängen börjar med '/' eller '*' så hoppar vi vidare 
            Raden i fråga räknas då som en kommentar 
            Listan måste innehålla minst två värden
-           Det får heller inte finnas en gate med samma namn i listan
-        */
+           Det får heller inte finnas en gate med samma namn i listan */
         if(strLine.matches("^[/|\\*].+") || tmp.length < 2 || gates.containsValue(tmp[1])){
           continue;
         }
@@ -130,19 +139,27 @@ public abstract class Gate {
         /* Sparar undran klassen */
         gates.put(tmp[0], gate);
         
-        /* Sparar undran den andra temp-listan som en ArrayList i stället för en Array
-           Eftersom den då är enklare att manipulera */
+        /* Sparar undan den andra temp-listan som en ArrayList i stället för en Array */
         gate.setSlug(new ArrayList(Arrays.asList(tmp)));
+        
       }  
-    } catch(Exception e) {
-      throw new GateException("Filen går inte att hitta");
+    } catch(FileNotFoundException e) {
+      Gate.customErrorMessage(line, e, file, "Filen kunde inte hittas");
+    } catch(IOException e){
+      Gate.customErrorMessage(line, e, file, "Något gick fel vid inläsning");
+    } catch(ClassNotFoundException e){
+      Gate.customErrorMessage(line, e, file, "En utav grindarna som angavs hittades inte.");
+    } catch(InstantiationException e){
+      Gate.customErrorMessage(line, e, file, "En utav grindarna som angavs kunde inte tas i bruk");
+    } catch(IllegalAccessException e){
+      Gate.customErrorMessage(line, e, file, "Du har inte läs- / skriv-rättigheter till en utav grindarna");
+    } catch (Exception e){
+      Gate.customErrorMessage(line, e, file, "Okänt fel har uppstått");
     }
     
-    ArrayList<String> list = null;
     Iterator first         = gates.entrySet().iterator();
     Gate superGate         = null;
     Gate incoming          = null;
-    Gate workingGate       = null;
     
     while (first.hasNext()) {
       
@@ -157,18 +174,13 @@ public abstract class Gate {
         /* Plockar ut gaten som {superGate} är relaterad till */
         incoming = (Gate) gates.get(value);
         
-        try {
-          superGate.setInputGate(incoming);
-        } catch (Exception e){
-          Gate.error(e.getMessage());
-        }
+        /* Sätter den funna gaten som ingång */
+        superGate.setInputGate(incoming);
       }
     }
     return gates;
   }
-  
-  public abstract void inputChanged();
-  
+
   /**
   * Printar ut ett felmeddelande på skärmen
   * @return none
@@ -179,5 +191,20 @@ public abstract class Gate {
     System.err.println(message);
     System.err.println("------------");
   }
+  
+  /**
+  * Printar ut ett felmeddelande på skärmen
+  * @return none
+  * @param line, raden där felet inträffade
+  * @param e, felet som kastades av java
+  * @param file, filen som genererade felet
+  * @param custom, ett eget felmeddelande
+  */
+  public static void customErrorMessage(int line, Exception e, File file, String custom){
+    throw new GateException(custom + ", filen " + file.getName() + ", rad " + Integer.toString(line) + ", fel: " + e.getMessage());
+  }
+  
+  public abstract boolean calculateValue();
+  public abstract void inputChanged();
   
 }
