@@ -9,7 +9,7 @@ public abstract class Gate {
   protected boolean outputValue;
   protected ArrayList<Gate> outputGates;
   protected ArrayList<Gate> inputGates;
-  protected static int delay;
+  protected static int delay = 100;
   
   public Gate(){
     this.inputGates = new ArrayList<Gate>();
@@ -132,13 +132,13 @@ public abstract class Gate {
         parsedStrings.remove(0); parsedStrings.remove(0);
       
         /* Resterande ord i listan är gatens inputgates */
-        ArrayList<String> inputGates = new ArrayList<String>();
+        ArrayList<String> inputStrings = new ArrayList<String>();
         if (!parsedStrings.isEmpty()) {
           for (String s : parsedStrings) {
-            inputGates.add(s);
+            inputStrings.add(s);
           }
         }
-        gateInputs.put(g, inputGates);
+        gateInputs.put(g, inputStrings);
       
         /* Tömmer listan med ord inför nästa iterering */
         parsedStrings.clear();

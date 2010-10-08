@@ -1,6 +1,6 @@
 ** xor **
 x SIGNALGATE
-y SIGNAL
+y SIGNALL
 y' NOT y
 x' NOT x
 a1 AND x y'

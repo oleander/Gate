@@ -15,5 +15,6 @@ public class NotGate extends BasicGate  {
       throw new GateException("Error: Tried to add more than one input gate to gate: " + this.getName());
     }
     this.inputGates.add(gate);
+    gate.setOutputGate(this);
   }
 }
