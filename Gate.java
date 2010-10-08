@@ -180,17 +180,6 @@ public abstract class Gate {
     }
     return gates;
   }
-
-  /**
-  * Printar ut ett felmeddelande på skärmen
-  * @return none
-  * @param message, meddelandet som ska printas ut på skärmen
-  */
-  public static void error(String message){
-    System.err.println("------------");
-    System.err.println(message);
-    System.err.println("------------");
-  }
   
   /**
   * Printar ut ett felmeddelande på skärmen
