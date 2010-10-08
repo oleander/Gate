@@ -1,3 +1,5 @@
+
+
 public class NandGate extends BasicGate {
   public NandGate(){
     super(); 

@@ -75,39 +75,57 @@ public abstract class Gate {
   
   public abstract void inputChanged();
   
-  public static Map<String,Gate> createGates(File f) {
+  public static Map<String,Gate> createGates(File f) throws GateException {
     LinkedHashMap<String,Gate> output = new LinkedHashMap<String,Gate>();
     LinkedHashMap<Gate,ArrayList<String>> gateInputs = new LinkedHashMap<Gate,ArrayList<String>>();
     ArrayList<String> parsedStrings = new ArrayList<String>();
+    String gateType;
+    String gateName;
+    String buffer = "";
+    BufferedReader r;
+    int lineNumber = 1;
     
     try {
-      BufferedReader r = new BufferedReader (new FileReader(f));
-      String buffer = "";
-      
-      /* Går igenom filen rad för rad. */
+      r = new BufferedReader (new FileReader(f));
+    } catch (Exception e) {
+      throw new GateException("Error: Could not read file: " + e.getMessage());
+    }
+    
+    /* Går igenom filen rad för rad. */
+    try {
       while ((buffer = r.readLine()) != null) {
-        
+        Gate g;
+      
         /* Om raden börjar med * eller / hoppar vi över den. */
         if (buffer.startsWith("*") || buffer.startsWith("/")) {
           continue;
         }
-        
+      
         /* Parsar ut och formaterar alla 'ord' i den aktuella raden. */
         parsedStrings = gateParser(buffer);
-        
+        gateName = parsedStrings.get(0);
+        gateType = parsedStrings.get(1);
+      
         /* Skapar en gate med hjälp av ord 2, som är gatens klassnamn */
-        Gate g = (Gate) Class.forName(parsedStrings.get(1)).newInstance();
+        try {
+          g = (Gate) Class.forName(gateType).newInstance();
+        } catch(Exception e) {
+          throw new GateException("Error: invalid gate type - " + e.getMessage(), f, lineNumber);
+        }
         
         /* Ställer in gatens namn */
-        
-        g.setName(parsedStrings.get(0));
-        
+        g.setName(gateName);
+      
         /* Placerar gate och namn i mappen */
-        output.put(parsedStrings.get(0), g);
-        
+        if (output.containsKey(gateName)) {
+          throw new GateException("Error: several gates with matching names.", f, lineNumber);
+        } else {
+         output.put(gateName, g); 
+        }
+      
         /* Tar bort gatens namn och klass */
         parsedStrings.remove(0); parsedStrings.remove(0);
-        
+      
         /* Resterande ord i listan är gatens inputgates */
         ArrayList<String> inputGates = new ArrayList<String>();
         if (!parsedStrings.isEmpty()) {
@@ -116,25 +134,31 @@ public abstract class Gate {
           }
         }
         gateInputs.put(g, inputGates);
-        
+      
         /* Tömmer listan med ord inför nästa iterering */
         parsedStrings.clear();
+        
+        lineNumber++;
       }
-      
-      /* Ställer in inputgates för alla gatear */
-      Iterator i = output.entrySet().iterator();
-      Gate g;
-      while (i.hasNext()) {
-        /* Objekten som vi itererar över är av typen Map.Entry (måste castas) som innehåller både nyckel och värde */
-        g = (Gate)((Map.Entry)i.next()).getValue();
-        for (String s : gateInputs.get(g)) {
-          g.setInputGate(output.get(s));
-        }
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception e){
+      throw new GateException(e.getMessage());
     }
     
+    /* Ställer in inputgates för alla gatear */
+    Gate g;
+    lineNumber = 1;
+    for(Map.Entry<String,Gate> entry : output.entrySet()) {
+      /* Objekten som vi itererar över är av typen Map.Entry (måste castas) som innehåller både nyckel och värde */
+      g = entry.getValue();
+      for (String s : gateInputs.get(g)) {
+        try { 
+          g.setInputGate(output.get(s));
+          lineNumber++;
+        } catch (Exception e) {
+          throw new GateException (e.getMessage(), f, lineNumber);
+        }
+      }
+    }
     return output;
   }
   
@@ -160,9 +184,9 @@ public abstract class Gate {
     return new String(c);
   }
   
-  public static void main(String[] args) {
-    File f = new File("xor.txt");
-    createGates(f);
-  }
+  // public static void main(String[] args) {
+  //   File f = new File("xor.txt");
+  //   createGates(f);
+  // }
   
 }

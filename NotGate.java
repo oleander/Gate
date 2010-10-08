@@ -11,7 +11,10 @@ public class NotGate extends BasicGate  {
   }
   
   // Får man göra så här? Eller får man spec-smisk?
-  public void getInputGate(Gate gate) throws GateException {
-    this.getInputGates().set(0, gate);
+  public void setInputGate(Gate gate) throws GateException {
+    if (this.inputGates.size() >= 1) {
+      throw new GateException("Error: Tried to add more than one input gate to gate: " + this.getName());
+    }
+    this.inputGates.add(gate);
   }
 }

@@ -1,3 +1,5 @@
+
+
 public class SignalGate extends Gate {
   
   public SignalGate(){

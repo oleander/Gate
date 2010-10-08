@@ -1,3 +1,5 @@
+
+
 public class NorGate extends BasicGate {
   public NorGate(){
     super();
