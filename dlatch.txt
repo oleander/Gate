@@ -4,3 +4,5 @@ c SIGNAL
 d' NOT d
 a1 AND d' c
 a2 AND d c
+q  NOR a1 q'
+q' NOR a2 q
