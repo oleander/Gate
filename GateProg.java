@@ -90,7 +90,7 @@ import java.io.*;
    }
 
    private void finish() {
-     if (!(JOptionPane.showConfirmDialog(null, "Vill du öppna en annan fil?") == 0))
+     if (!(JOptionPane.showConfirmDialog(null, "Vill du Ã¶ppna en annan fil?") == 0))
        System.exit(0);
      else
        new GateProg(); 
