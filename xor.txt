@@ -1,5 +1,5 @@
 ** xor **
-x SIGNAL
+x SIGNALGATE
 y SIGNAL
 y' NOT y
 x' NOT x

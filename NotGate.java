@@ -10,7 +10,6 @@ public class NotGate extends BasicGate  {
     return !this.getInputGates().get(0).getOutputValue();
   }
   
-  // Får man göra så här? Eller får man spec-smisk?
   public void setInputGate(Gate gate) throws GateException {
     if (this.inputGates.size() >= 1) {
       throw new GateException("Error: Tried to add more than one input gate to gate: " + this.getName());
