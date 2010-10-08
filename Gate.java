@@ -39,6 +39,10 @@ public abstract class Gate {
   * Se @return
   * @param none
   * @return en lista med ingående värden till gaten
+  * Exempel: 
+        Om en rad i en konfig-fil ser ut som följer;
+        z  OR a1 a2
+        Så sparas a1 och a2 i {slug}
   */
   private ArrayList<String> getSlug(){
     return this.slug;
