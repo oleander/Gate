@@ -135,7 +135,7 @@ public abstract class Gate {
         /* Skapar en instans av den angivna klassen */
         gate = (Gate) Class.forName(tmp[1]).newInstance();
         
-        /* Sparar undran den nuvarande plaseringen och filen */
+        /* Sparar undran den nuvarande placeringen och filen */
         gate.line = line; gate.file = file;
         
         /* Sätter namnet på griden */
