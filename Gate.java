@@ -179,6 +179,12 @@ public abstract class Gate {
         /* Plockar ut gaten som {superGate} är relaterad till */
         incoming = (Gate) gates.get(value);
         
+        /* Om inte ingången finns i gate-listan så 
+           finns det helt enkelt inget att lägga till */
+        if(incoming == null){
+          continue;
+        }
+        
         /* Sätter den funna gaten som ingång */
         superGate.setInputGate(incoming);
       }
