@@ -125,10 +125,9 @@ public abstract class Gate {
         /* Om strängen börjar med '/' eller '*' så hoppar vi vidare 
            Raden i fråga räknas då som en kommentar 
            Listan måste innehålla minst två värden
-           Det får heller inte finnas en gate med samma namn i listan */
-        if(strLine.matches("^[/|\\*].+") || tmp.length < 2 || gates.containsValue(tmp[0])){
-          continue;
-        }
+           Det får heller inte finnas en gate med samma namn i listan 
+           Yes, första onelinern i Java ! */
+        if(strLine.matches("^[/|\\*].+") || tmp.length < 2 || gates.containsValue(tmp[0])) continue;
         
         /* Gör om strängen {tmp[1]} från slump-tecken till CamelCasing */
         tmp[1] = Gate.createClass(tmp[1]);
@@ -137,13 +136,12 @@ public abstract class Gate {
         gate = (Gate) Class.forName(tmp[1]).newInstance();
         
         /* Sparar undran den nuvarande plaseringen och filen */
-        gate.line = line;
-        gate.file = file;
+        gate.line = line; gate.file = file;
         
         /* Sätter namnet på griden */
         gate.setName(tmp[0]);
         
-        /* Sparar undran klassen */
+        /* Sparar undan klassen */
         gates.put(tmp[0], gate);
         
         /* Sparar undan den andra temp-listan som en ArrayList i stället för en Array */
