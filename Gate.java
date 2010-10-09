@@ -61,56 +61,6 @@ public abstract class Gate {
     return tmp;
   }
   
-  public String getName(){
-    return this.name;
-  }
-  
-  public void setName(String name){
-    this.name = name;
-  }
-  
-  public boolean getOutputValue(){
-    return this.outputValue;
-  }
-  
-  public void setOutputValue(boolean value){
-    this.outputValue = value;
-  }
-  
-  public void setInputGate(Gate gate){
-    /* Innehåller griden redan {gate} ? */
-    if(this.inputGates.contains(gate)){
-      Gate.customErrorMessage(this.line, new IllegalArgumentException(), this.file, "Ingången används redan");
-    }
-    
-    /* Om inte så jobbar vi på som vanligt */
-    this.inputGates.add(gate);
-    gate.setOutputGate(this);
-  }
-  
-  public List<Gate> getInputGates(){
-    return (List<Gate>) this.inputGates;
-  }
-  
-  public static void setDelay(int d){
-    delay = d;
-  }
-  
-  public static int getDelay(){
-    return delay;
-  }
-  
-  public void outputChanged(boolean value) {
-    this.outputValue = value;
-    for (Gate g : this.outputGates) {
-      g.inputChanged();
-    }
-  }
-  
-  public void setOutputGate(Gate g) {
-    this.outputGates.add(g);
-  }
-  
   /**
   * Se @param
   * Används av {equals}
@@ -251,4 +201,54 @@ public abstract class Gate {
   public abstract boolean calculateValue();
   public abstract void inputChanged();
   
+  /* Se spec för mer info */
+  public String getName(){
+    return this.name;
+  }
+  
+  public void setName(String name){
+    this.name = name;
+  }
+  
+  public boolean getOutputValue(){
+    return this.outputValue;
+  }
+  
+  public void setOutputValue(boolean value){
+    this.outputValue = value;
+  }
+  
+  public void setInputGate(Gate gate){
+    /* Innehåller griden redan {gate} ? */
+    if(this.inputGates.contains(gate)){
+      Gate.customErrorMessage(this.line, new IllegalArgumentException(), this.file, "Ingången används redan");
+    }
+    
+    /* Om inte så jobbar vi på som vanligt */
+    this.inputGates.add(gate);
+    gate.setOutputGate(this);
+  }
+  
+  public List<Gate> getInputGates(){
+    return (List<Gate>) this.inputGates;
+  }
+  
+  public static void setDelay(int d){
+    delay = d;
+  }
+  
+  public static int getDelay(){
+    return delay;
+  }
+  
+  public void outputChanged(boolean value) {
+    this.outputValue = value;
+    for (Gate g : this.outputGates) {
+      g.inputChanged();
+    }
+  }
+  
+  public void setOutputGate(Gate g) {
+    this.outputGates.add(g);
+  }
 }
