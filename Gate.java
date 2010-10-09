@@ -47,7 +47,18 @@ public abstract class Gate {
         Så sparas a1 och a2 i {slug}
   */
   private ArrayList<String> getSlug(){
-    return this.slug;
+    /* Sparar undran instansvariabeln
+       Tömmer sedan instansen {slug} 
+       Varvid vi säger till java att städa
+       
+       Optimalt? Ingen aning, men det lär inte bli värre än innan :)
+       {slug} ska nämligen inte användas mer, 
+       där av verkar det aningen onödigt att ha kvar värdet i instansen. */
+    ArrayList<String> tmp = this.slug;
+    this.slug = null;
+    System.gc();
+    
+    return tmp;
   }
   
   public String getName(){
@@ -67,9 +78,12 @@ public abstract class Gate {
   }
   
   public void setInputGate(Gate gate){
+    /* Innehåller griden redan {gate} ? */
     if(this.inputGates.contains(gate)){
       Gate.customErrorMessage(this.line, new IllegalArgumentException(), this.file, "Ingången används redan");
     }
+    
+    /* Om inte så jobbar vi på som vanligt */
     this.inputGates.add(gate);
     gate.setOutputGate(this);
   }
@@ -134,6 +148,9 @@ public abstract class Gate {
     return var.substring(0,1).toUpperCase() + var.substring(1).toLowerCase() + "Gate";
   }
   
+  /**
+  * Se spec
+  */
   public static Map<String,Gate> createGates(File file){
     BufferedReader br                   = null;
     String strLine                      = null;
@@ -230,6 +247,7 @@ public abstract class Gate {
     throw new GateException(custom + ", filen " + file.getName() + ", rad " + Integer.toString(line) + ", fel: " + e.getMessage());
   }
   
+  /* Abstrakta metoder */
   public abstract boolean calculateValue();
   public abstract void inputChanged();
   
