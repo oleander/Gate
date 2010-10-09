@@ -8,6 +8,8 @@ public abstract class Gate {
   protected ArrayList<Gate> outputGates;
   protected ArrayList<Gate> inputGates;
   protected static int delay;
+  private File file;
+  private int line;
   
   /* Innehåller en lista på ingående parametrar till griden i fråga 
      Listan gå inte att komma åt utifrån, då alla värden i listan är skräpvärden */
@@ -65,6 +67,9 @@ public abstract class Gate {
   }
   
   public void setInputGate(Gate gate){
+    if(this.inputGates.contains(gate)){
+      Gate.customErrorMessage(this.line, new IllegalArgumentException(), this.file, "Ingången används redan");
+    }
     this.inputGates.add(gate);
     gate.setOutputGate(this);
   }
@@ -90,6 +95,30 @@ public abstract class Gate {
   
   public void setOutputGate(Gate g) {
     this.outputGates.add(g);
+  }
+  
+  /**
+  * Se @param
+  * Används av {equals}
+  * @return En sträng-representation av griden
+            Vilket i vårt fall är namnet på griden
+  */
+  public String toString(){
+    return this.name;
+  }
+  
+  /**
+  * Kontrollerar ifall två objekt (Gate) är like
+  * Används av {ArrayList.contains}
+  * @param gate, Gaten som vi ska jämföra med
+  * @return true om ingående objekt har samma sträng-representation som den nuvarande instansen
+  */
+  public boolean equals(Object gate){
+    if(!(gate instanceof Gate)){
+      return false;
+    }
+    
+    return this.toString().equals(((Gate) gate).toString());
   }
   
   /**
@@ -127,7 +156,7 @@ public abstract class Gate {
            Raden i fråga räknas då som en kommentar 
            Listan måste innehålla minst två värden
            Det får heller inte finnas en gate med samma namn i listan */
-        if(strLine.matches("^[/|\\*].+") || tmp.length < 2 || gates.containsValue(tmp[1])){
+        if(strLine.matches("^[/|\\*].+") || tmp.length < 2 || gates.containsValue(tmp[0])){
           continue;
         }
         
@@ -136,6 +165,10 @@ public abstract class Gate {
         
         /* Skapar en instans av den angivna klassen */
         gate = (Gate) Class.forName(tmp[1]).newInstance();
+        
+        /* Sparar undran den nuvarande plaseringen och filen */
+        gate.line = line;
+        gate.file = file;
         
         /* Sätter namnet på griden */
         gate.setName(tmp[0]);
