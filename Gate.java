@@ -20,6 +20,9 @@ public abstract class Gate {
     this.outputGates = new ArrayList<Gate>();
   }
   
+  /**
+  * Se spec
+  */
   public void init(){
     this.inputChanged();
   }
