@@ -107,14 +107,18 @@ public abstract class Gate {
     /* Går igenom filen rad för rad. */
     try {
       while ((buffer = r.readLine()) != null) {
-        /* Om raden börjar med * eller / hoppar vi över den. */
-        if (buffer.startsWith("*") || buffer.startsWith("/")) {
+        /* Om raden börjar med * eller / eller bara innehåller whitespace hoppar vi över den. */
+        if (buffer.startsWith("*") || buffer.startsWith("/") || buffer.trim().length() == 0) {
           lineNumber++;
           continue;
         }
       
-        /* Parsar ut och formaterar alla 'ord' i den aktuella raden. */
-        parsedStrings = gateParser(buffer);
+        /* Parsar ut och formaterar alla 'ord' i den aktuella raden. Kastar ett GateException om något går fel */
+        try {
+          parsedStrings = gateParser(buffer);
+        } catch (GateException e) {
+          throw new GateException(e.getMessage(), f, lineNumber);
+        }
         gateName = parsedStrings.get(0);
         gateType = parsedStrings.get(1);
       
@@ -191,8 +195,12 @@ public abstract class Gate {
       output.add(m.group(0));
     }
     
-    /* Ord två bör vara gatetypen. Vi använder capitalize och lägger till Gate för att typen ska matcha classnamnet. */
-    output.set(1, toGateClassName(output.get(1)));
+    /* Ord två bör vara gatetypen. Vi använder toGateClassName() för att typen ska matcha klassnamnet. */
+    try {
+      output.set(1, toGateClassName(output.get(1)));
+    } catch (IndexOutOfBoundsException e) {
+      throw new GateException ("Error: could parse config file - " + e.getMessage());
+    }
     return output;
   }
   
