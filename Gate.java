@@ -1,3 +1,11 @@
+/*  
+    Gate 1.0 (2010-10-11) - Linus Oleander & Jesper Josefsson
+    Gateklassen beskriver en generell Gate.
+    Eventuellt borde vi skriva hashCode() och equals()-metoder eftersom vi använder bl.a. HashMap.
+    
+    createGates accepterar gatetyper med eller utan -gate-postfix samt med både versaler och gemener.
+ */
+
 import java.util.*;
 import java.io.*;
 import java.util.regex.*;
@@ -86,20 +94,19 @@ public abstract class Gate {
     String gateName;
     String buffer = "";
     BufferedReader r;
+    Gate g;
     /* Håller reda på vilken rad i configfilen som bearbetas */
     int lineNumber = 1;
     
     try {
       r = new BufferedReader (new FileReader(f));
-    } catch (Exception e) {
+    } catch (FileNotFoundException e) {
       throw new GateException("Error: Could not read file: " + e.getMessage());
     }
     
     /* Går igenom filen rad för rad. */
     try {
       while ((buffer = r.readLine()) != null) {
-        Gate g;
-      
         /* Om raden börjar med * eller / hoppar vi över den. */
         if (buffer.startsWith("*") || buffer.startsWith("/")) {
           lineNumber++;
@@ -114,8 +121,12 @@ public abstract class Gate {
         /* Skapar en gate med hjälp av gateName, som är gatens klassnamn */
         try {
           g = (Gate) Class.forName(gateType).newInstance();
-        } catch(Exception e) {
+        } catch(ClassNotFoundException e) {
           throw new GateException("Error: invalid gate type - " + e.getMessage(), f, lineNumber);
+        } catch(InstantiationException e) {
+          throw new GateException("Error: error in the class for gate type - " + e.getMessage(), f, lineNumber);
+        } catch(IllegalAccessException e) {
+          throw new GateException("Error: no access to class for gate type - " + e.getMessage(), f, lineNumber);
         }
         
         /* Ställer in gatens namn */
@@ -145,23 +156,24 @@ public abstract class Gate {
         
         lineNumber++;
       }
-    } catch (Exception e){
-      throw new GateException(e.getMessage());
+    } catch (GateException e){
+      throw e;
+    } catch (IOException e) {
+      throw new GateException ("Error while reading file - " + e.getMessage(), f, lineNumber);
     }
     
-    Gate g;
-    lineNumber = 1;
     /* För varje gate i output-mappen går man igenom inputgates-listan för den gaten och lägger till dessa gatear genom att
        slå upp dem i output-mappen.
      */
+    lineNumber = 1;
     for(Map.Entry<String,Gate> entry : output.entrySet()) {
       g = entry.getValue();
       for (String s : gateInputs.get(g)) {
         try { 
           g.setInputGate(output.get(s));
           lineNumber++;
-        } catch (Exception e) {
-          throw new GateException (e.getMessage(), f, lineNumber);
+        } catch (NullPointerException e) {
+          throw new GateException ("Error: input gate not found - " + e.getMessage(), f, lineNumber);
         }
       }
     }
