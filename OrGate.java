@@ -1,5 +1,3 @@
-
-
 public class OrGate extends BasicGate {
   
   public OrGate(){

@@ -1,5 +1,3 @@
-
-
 public class AndGate extends BasicGate {
   public AndGate(){
     super();
