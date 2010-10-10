@@ -124,10 +124,11 @@ public abstract class Gate {
         
         /* Om strängen börjar med '/' eller '*' så hoppar vi vidare 
            Raden i fråga räknas då som en kommentar 
-           Listan måste innehålla minst två värden
-           Det får heller inte finnas en gate med samma namn i listan 
-           Yes, första onelinern i Java ! */
-        if(strLine.matches("^[/|\\*].+") || tmp.length < 2 || gates.containsValue(tmp[0])) continue;
+           Listan måste innehålla minst två värden */
+        if(strLine.matches("^[/|\\*].+") || tmp.length < 2) continue;
+        
+        /* Finns redan griden i listan? */
+        if(gates.containsValue(tmp[0])) throw new IllegalArgumentException();
         
         /* Gör om strängen {tmp[1]} från slump-tecken till CamelCasing */
         tmp[1] = Gate.createClass(tmp[1]);
@@ -158,8 +159,6 @@ public abstract class Gate {
       Gate.customErrorMessage(line, e, file, "En utav grindarna som angavs kunde inte tas i bruk");
     } catch(IllegalAccessException e){
       Gate.customErrorMessage(line, e, file, "Du har inte läs- / skriv-rättigheter till en utav grindarna");
-    } catch (Exception e){
-      Gate.customErrorMessage(line, e, file, "Okänt fel har uppstått");
     }
     
     Iterator first         = gates.entrySet().iterator();
@@ -182,7 +181,7 @@ public abstract class Gate {
         /* Om inte ingången finns i gate-listan så 
            finns det helt enkelt inget att lägga till */
         if(incoming == null){
-          continue;
+          Gate.customErrorMessage(superGate.line, new IllegalAccessException(), superGate.file, "Griden du angav finns inte");
         }
         
         /* Sätter den funna gaten som ingång */
