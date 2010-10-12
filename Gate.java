@@ -13,11 +13,11 @@ import java.lang.Class;
 
 public abstract class Gate {
 
-  protected String name;
-  protected boolean outputValue;
-  protected ArrayList<Gate> outputGates;
-  protected ArrayList<Gate> inputGates;
-  protected static int delay = 100;
+  private String name;
+  private boolean outputValue;
+  private ArrayList<Gate> outputGates;
+  private ArrayList<Gate> inputGates;
+  private static int delay = 100;
   
   public Gate(){
     this.inputGates = new ArrayList<Gate>();
@@ -52,11 +52,15 @@ public abstract class Gate {
   /* Lägger till en gate i this inputlista, men även this i argumentgatens outputlista. */
   public void setInputGate(Gate gate){
     this.inputGates.add(gate);
-    gate.setOutputGate(this);
+    gate.outputGates.add(this);
   }
   
   public List<Gate> getInputGates(){
     return (List<Gate>) this.inputGates;
+  }
+  
+  public List<Gate> getOutputGates(){
+    return (List<Gate>) this.outputGates;
   }
   
   public abstract boolean calculateValue();
@@ -75,10 +79,6 @@ public abstract class Gate {
     for (Gate g : this.outputGates) {
       g.inputChanged();
     }
-  }
-  
-  protected void setOutputGate(Gate g) {
-    this.outputGates.add(g);
   }
   
   public abstract void inputChanged();
@@ -178,6 +178,8 @@ public abstract class Gate {
           lineNumber++;
         } catch (NullPointerException e) {
           throw new GateException ("Error: input gate not found - " + e.getMessage(), f, lineNumber);
+	} catch (GateException e) {
+	  throw new GateException (e.getMessage(), f, lineNumber);
         }
       }
     }

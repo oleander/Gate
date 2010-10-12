@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 public abstract class BasicGate extends Gate implements ActionListener {
   
   /* Skapar timer med delayvärdet från superklassen Gate, samt ställer in sig själv som lyssnare. */
-  private Timer t = new Timer(this.delay, this);
+  private Timer t = new Timer(Gate.getDelay(), this);
   private boolean newValue = false;
   
   public BasicGate(){
@@ -21,11 +21,12 @@ public abstract class BasicGate extends Gate implements ActionListener {
      Förbereder byte av värde genom att spara ner det nya värdet och starta timern. 
    */
   public void inputChanged(){
+    this.newValue = this.calculateValue();
     if (this.t.isRunning()) {
       return;
     }
-    this.newValue = this.calculateValue();
     if (this.getOutputValue() != newValue) {
+      t.setDelay(Gate.getDelay());
       t.start();
     }
   }

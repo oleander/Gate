@@ -4,10 +4,10 @@ public class AndGate extends BasicGate {
   }
   
   public boolean calculateValue() throws GateException {
-    if (this.inputGates.size() < 2) {
-      throw new GateException("Error in: " + this.name + " - invalid number of input gates.");
+    if (this.getInputGates().size() < 2) {
+      throw new GateException("Error in: " + this.getName() + " - invalid number of input gates.");
     }
-    for (Gate g : this.inputGates) {
+    for (Gate g : this.getInputGates()) {
       if (!g.getOutputValue()) {
         return false;
       }

@@ -11,10 +11,10 @@ public class NotGate extends BasicGate  {
   }
   
   public void setInputGate(Gate gate) throws GateException {
-    if (this.inputGates.size() >= 1) {
+    if (this.getInputGates().size() >= 1) {
       throw new GateException("Error: Tried to add more than one input gate to gate: " + this.getName());
     }
-    this.inputGates.add(gate);
-    gate.setOutputGate(this);
+    this.getInputGates().add(gate);
+    gate.getOutputGates().add(this);
   }
 }
