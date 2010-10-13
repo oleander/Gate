@@ -1,5 +1,5 @@
 /*  
-    Gate 1.0 (2010-10-11) - Linus Oleander & Jesper Josefsson
+    Gate 1.1 (2010-10-13) - Linus Oleander & Jesper Josefsson
     Gateklassen beskriver en generell Gate.
     Eventuellt borde vi skriva hashCode() och equals()-metoder eftersom vi använder bl.a. HashMap.
     
