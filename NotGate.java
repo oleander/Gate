@@ -1,6 +1,9 @@
 public class NotGate extends BasicGate  {
   public NotGate(){
-    
+    super();
+  }
+  public NotGate(String s) {
+    super(s);
   }
   
   public boolean calculateValue() throws GateException {

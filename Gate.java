@@ -17,7 +17,10 @@ public abstract class Gate {
   private boolean outputValue;
   private ArrayList<Gate> outputGates;
   private ArrayList<Gate> inputGates;
-  private static int delay = 100;
+  private static int delay = 1;
+  /* Håller reda på vilken linje i originalfilen skapade en given gate  */
+  private int lineNumber;
+  private File originFile;
   
   public Gate(){
     this.inputGates = new ArrayList<Gate>();
@@ -83,12 +86,29 @@ public abstract class Gate {
   
   public abstract void inputChanged();
   
+  public void setLine(int theLine) {
+    this.lineNumber = theLine; 
+  }
+  
+  public int getLine() {
+    return this.lineNumber;
+  }
+  
+  public void setOriginFile(File f) {
+    this.originFile = f;
+  }
+  
+  public File getOriginFile() {
+    return this.originFile;
+  }
+  
   /* Returnernar en map med gatenamn och gatear från en config-fil */
   public static Map<String,Gate> createGates(File f) throws GateException {
     /* Innehåller resultatet parsningen */
     LinkedHashMap<String,Gate> output = new LinkedHashMap<String,Gate>();
     /* Innehåller parsade gatear och listor med namn på deras inputgatear */
     LinkedHashMap<Gate,ArrayList<String>> gateInputs = new LinkedHashMap<Gate,ArrayList<String>>();
+    /* Innehåller strängar som ska omvandlas till inputgatear */
     ArrayList<String> parsedStrings = new ArrayList<String>();
     String gateType;
     String gateName;
@@ -135,6 +155,10 @@ public abstract class Gate {
         
         /* Ställer in gatens namn */
         g.setName(gateName);
+        /* Sparar undan gatens skapelselinje */
+        g.setLine(lineNumber);
+        /* Sparar undan gatens ursprungsfil */
+        g.setOriginFile(f);
       
         /* Placerar gate och namn i mappen, checkar först efter multipla gatear med samma namn */
         if (output.containsKey(gateName)) {
@@ -169,17 +193,18 @@ public abstract class Gate {
     /* För varje gate i output-mappen går man igenom inputgates-listan för den gaten och lägger till dessa gatear genom att
        slå upp dem i output-mappen.
      */
-    lineNumber = 1;
+    int currentLine;
     for(Map.Entry<String,Gate> entry : output.entrySet()) {
       g = entry.getValue();
+      currentLine = g.getLine();
       for (String s : gateInputs.get(g)) {
         try { 
           g.setInputGate(output.get(s));
           lineNumber++;
         } catch (NullPointerException e) {
-          throw new GateException ("Error: input gate not found - " + e.getMessage(), f, lineNumber);
+          throw new GateException ("Error: input gate not found - " + e.getMessage(), f, g.getLine());
 	} catch (GateException e) {
-	  throw new GateException (e.getMessage(), f, lineNumber);
+	  throw new GateException (e.getMessage(), f, currentLine);
         }
       }
     }

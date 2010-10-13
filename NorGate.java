@@ -6,10 +6,10 @@ public class NorGate extends BasicGate {
   }
   
   public boolean calculateValue() throws GateException {
-    if (this.getInputGates().size() < 2) {
-      throw new GateException("Error in: " + this.getName() + " - invalid number of input gates.");
+    if (getInputGates().size() < 2) {
+      throw new GateException("Error in: " + getName() + " - invalid number of input gates.");
     }
-    for (Gate g : this.getInputGates()) {
+    for (Gate g : getInputGates()) {
       if (g.getOutputValue()) {
         return false;
       }

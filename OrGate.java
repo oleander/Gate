@@ -5,11 +5,11 @@ public class OrGate extends BasicGate {
   }
   
   public boolean calculateValue() throws GateException {
-    if (this.getInputGates().size() < 2) {
-      throw new GateException("Error in: " + this.getName() + " - invalid number of input gates.");
+    if (getInputGates().size() < 2) {
+      throw new GateException("Error in: " + getName() + " - invalid number of input gates.", getOriginFile(), getLine());
     }
     int trues = 0;
-    for (Gate g : this.getInputGates()) {
+    for (Gate g : getInputGates()) {
       if (g.getOutputValue()) {
         trues++;
       }

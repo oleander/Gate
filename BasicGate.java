@@ -14,7 +14,10 @@ public abstract class BasicGate extends Gate implements ActionListener {
   private boolean newValue = false;
   
   public BasicGate(){
-    
+    super();
+  }
+  public BasicGate(String value) {
+    super(value);
   }
   
   /* Kontrollerar så att ett tidigare byte av värde inte redan pågår.
