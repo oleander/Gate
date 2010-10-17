@@ -202,7 +202,7 @@ public abstract class Gate {
           g.setInputGate(output.get(s));
           lineNumber++;
         } catch (NullPointerException e) {
-          throw new GateException ("Error: input gate not found - " + e.getMessage(), f, g.getLine());
+          throw new GateException ("Error: no input gate found.", f, g.getLine());
 	} catch (GateException e) {
 	  throw new GateException (e.getMessage(), f, currentLine);
         }
